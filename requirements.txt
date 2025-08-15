@@ -1,0 +1,47 @@
+# NDRC政策文件爬虫系统 - 依赖包列表
+
+# HTTP请求库
+requests>=2.28.0
+
+# HTML解析库
+beautifulsoup4>=4.11.0
+
+# 数据处理库
+pandas>=1.5.0
+
+# Excel文件处理
+openpyxl>=3.0.0
+
+# HTTP客户端库
+urllib3>=1.26.0
+
+# 日期时间处理
+python-dateutil>=2.8.0
+
+# 正则表达式增强
+regex>=2022.0.0
+
+# 进度条显示
+tqdm>=4.64.0
+
+# 日志格式化
+colorlog>=6.7.0
+
+# 配置文件处理
+configparser>=5.2.0
+
+# 文件路径处理
+pathlib2>=2.3.0; python_version < "3.4"
+
+# 编码检测
+chardet>=5.0.0
+
+# 网络请求重试
+tenacity>=8.2.0
+
+# 数据验证
+pydantic>=1.10.0
+
+# 异步支持（可选）
+aiohttp>=3.8.0
+asyncio-throttle>=1.0.0
