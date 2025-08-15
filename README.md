@@ -42,12 +42,17 @@ ndrc_crawler/
 ├── README.md                    # 项目说明文档
 ├── LICENSE                      # 开源许可证
 ├── .gitignore                   # Git忽略文件
+├── .cursorrules                 # AI配置文件（Cursor IDE）
 ├── config.py                    # 配置文件
 ├── ndrc_crawler.py              # 主爬虫程序
 ├── data_extractor_full.py       # 数据提取器（完整版）
 ├── content_splitter.py          # 内容分段器
 ├── attachment_splitter.py       # 附件拆解器
 ├── download_attachments.py      # 附件下载器
+├── commit_changes.py            # Git提交助手
+├── run.py                       # 一键启动脚本
+├── setup.py                     # 安装脚本
+├── requirements.txt             # 依赖管理
 ├── results/                     # 爬取结果目录
 │   ├── 发展改革委令/
 │   ├── 规范性文件/
@@ -58,6 +63,14 @@ ndrc_crawler/
 ├── full_data/                   # 完整数据目录（已忽略）
 └── *.xlsx                       # 数据输出文件
 ```
+
+### 配置文件说明
+
+- **`.cursorrules`**: Cursor IDE的AI配置文件，定义了AI助手的行为规则和项目开发指导原则
+  - 包含代码风格指南（PEP 8）
+  - 项目开发流程指导
+  - 错误处理和日志记录规范
+  - 文档编写要求
 
 ## 安装和使用
 
