@@ -14,15 +14,15 @@ def run_git_command(command, description):
     """运行Git命令"""
     print(f"🔄 {description}...")
     try:
-        result = subprocess.run(command, shell=True, capture_output=True, text=True, encoding='utf-8')
+        result = subprocess.run(command, shell=True, capture_output=True, text=True, encoding='utf-8', errors='ignore')
         if result.returncode == 0:
             print(f"✅ {description} 成功")
-            if result.stdout.strip():
+            if result.stdout and result.stdout.strip():
                 print(f"   输出: {result.stdout.strip()}")
             return True
         else:
             print(f"❌ {description} 失败")
-            if result.stderr.strip():
+            if result.stderr and result.stderr.strip():
                 print(f"   错误: {result.stderr.strip()}")
             return False
     except Exception as e:
@@ -32,14 +32,14 @@ def run_git_command(command, description):
 def check_git_config():
     """检查Git配置"""
     # 检查用户名
-    result = subprocess.run("git config user.name", shell=True, capture_output=True, text=True)
+    result = subprocess.run("git config user.name", shell=True, capture_output=True, text=True, encoding='utf-8', errors='ignore')
     if result.returncode != 0 or not result.stdout.strip():
         print("⚠️  Git用户名未配置")
         print("请运行: git config --global user.name \"您的姓名\"")
         return False
     
     # 检查邮箱
-    result = subprocess.run("git config user.email", shell=True, capture_output=True, text=True)
+    result = subprocess.run("git config user.email", shell=True, capture_output=True, text=True, encoding='utf-8', errors='ignore')
     if result.returncode != 0 or not result.stdout.strip():
         print("⚠️  Git邮箱未配置")
         print("请运行: git config --global user.email \"您的邮箱\"")
@@ -50,7 +50,7 @@ def check_git_config():
 
 def check_git_status():
     """检查Git状态"""
-    result = subprocess.run("git status --porcelain", shell=True, capture_output=True, text=True)
+    result = subprocess.run("git status --porcelain", shell=True, capture_output=True, text=True, encoding='utf-8', errors='ignore')
     if result.returncode == 0 and result.stdout.strip():
         return True
     return False
@@ -100,16 +100,19 @@ def show_commit_stats():
     """显示提交统计信息"""
     print("\n📊 提交统计:")
     
-    # 获取最近的提交信息
-    result = subprocess.run("git log --oneline -1", shell=True, capture_output=True, text=True)
-    if result.returncode == 0:
-        print(f"最新提交: {result.stdout.strip()}")
-    
-    # 获取文件统计
-    result = subprocess.run("git diff --cached --stat", shell=True, capture_output=True, text=True)
-    if result.returncode == 0 and result.stdout.strip():
-        print("\n文件变更统计:")
-        print(result.stdout.strip())
+    try:
+        # 获取最近的提交信息
+        result = subprocess.run("git log --oneline -1", shell=True, capture_output=True, text=True, encoding='utf-8', errors='ignore')
+        if result.returncode == 0 and result.stdout and result.stdout.strip():
+            print(f"最新提交: {result.stdout.strip()}")
+        
+        # 获取文件统计
+        result = subprocess.run("git diff --cached --stat", shell=True, capture_output=True, text=True, encoding='utf-8', errors='ignore')
+        if result.returncode == 0 and result.stdout and result.stdout.strip():
+            print("\n文件变更统计:")
+            print(result.stdout.strip())
+    except Exception as e:
+        print(f"获取统计信息时出错: {e}")
 
 def main():
     """主函数"""
