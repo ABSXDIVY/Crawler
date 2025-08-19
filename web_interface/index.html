@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AI 搜索前端（自动 open 对话）</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>AI 搜索</h1>
+
+      <section class="search">
+        <form id="searchForm">
+          <input id="query" type="text" placeholder="输入要搜索/询问的内容..." required />
+          <button id="btnSearch" type="submit">搜索</button>
+        </form>
+      </section>
+
+      <section class="result">
+        <div class="toolbar">
+          <span id="status">就绪</span>
+          <div class="spacer"></div>
+          <button id="copyBtn" type="button" class="secondary">复制结果</button>
+          <button id="cancelBtn" type="button" class="secondary">取消</button>
+        </div>
+        <pre id="output" class="output" spellcheck="false"></pre>
+        <details>
+          <summary>调试日志</summary>
+          <pre id="log" class="log" spellcheck="false"></pre>
+        </details>
+      </section>
+    </div>
+
+    <script src="./app.js"></script>
+  </body>
+  </html>
+
+

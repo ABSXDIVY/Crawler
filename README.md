@@ -1,130 +1,192 @@
-# NDRC政策文件爬虫系统
+# 政府政策文件爬虫系统
 
 ## 项目简介
 
-NDRC政策文件爬虫系统是一个专门用于爬取和处理国家发改委（NDRC）官网政策文件的Python工具。该系统能够自动爬取发改委官网的政策文件，提取结构化数据，并进行智能分段处理，为AI增强的国家政策检索工具提供数据支持。
+这是一个专门用于爬取中国政府网站政策文件的Python爬虫系统。系统包含两个主要模块：
 
-## 主要功能
+- **人力资源和社会保障部爬虫** (`mohrss_crawler/`) - 爬取人社部政策文件
+- **发改委爬虫** (`ndrc_crawler/`) - 爬取发改委政策文件
 
-### 🔍 数据爬取
-- **多分类爬取**：支持爬取发改委官网的5个主要政策分类
-  - 发展改革委令（最高级别政策文件）
-  - 规范性文件（重要规范性政策文件）
-  - 规划文本（发展规划类文件）
-  - 公告（重要公告信息）
-  - 通知（日常通知文件）
+系统采用模块化设计，具备完整的日志记录、错误处理、数据分析和结果保存功能，为政策研究和数据分析提供可靠的数据源。
+
+## 🚀 主要功能
+
+### 核心爬取功能
+- **多网站支持**：支持人社部和发改委两个重要政府网站
 - **智能分页**：自动检测和处理分页内容
 - **错误重试**：内置重试机制，确保数据完整性
-- **日志记录**：详细的爬取日志，便于监控和调试
+- **并发控制**：合理的请求间隔，避免对服务器造成压力
 
-### 📊 数据提取
+### AI智能功能
+- **智能体API集成**：支持AI智能体API，提供智能对话和搜索功能
+- **智能搜索**：基于AI的语义搜索，更准确地匹配用户需求
+- **Web界面**：提供现代化的Web界面，支持AI搜索和结果展示
+- **配置管理**：灵活的配置管理，支持多种API配置方式
+
+### 数据处理功能
 - **结构化提取**：从HTML页面中提取政策的关键信息
-  - 政策标题、发布日期、文号
-  - 政策分类、正文内容
-  - 附件信息和解读信息
-- **多工作表输出**：将数据保存到Excel文件的多个工作表中
+- **智能分段**：将长文本内容按语义智能分段
+- **附件处理**：支持下载和处理政策相关附件
 - **数据清洗**：自动清理和格式化提取的数据
 
-### ✂️ 内容处理
-- **智能分段**：将长文本内容按语义智能分段，确保每段不超过1000字符
-- **附件拆解**：自动识别和拆解包含多个附件的记录
-- **文件类型识别**：根据URL后缀自动识别文件类型
+### 输出格式
+- **Excel格式**：多工作表结构，便于数据分析
+- **JSON格式**：便于程序化处理
+- **原始HTML**：保存完整页面内容
+- **统计报告**：自动生成数据统计和分析报告
 
-### 📁 文件管理
-- **附件下载**：支持下载政策相关的附件文件
-- **目录组织**：按分类自动组织文件结构
-- **数据备份**：完整的原始数据备份
-
-## 项目结构
+## 📁 项目结构
 
 ```
-ndrc_crawler/
+Crawler/
 ├── README.md                    # 项目说明文档
 ├── LICENSE                      # 开源许可证
-├── .gitignore                   # Git忽略文件
-├── .cursorrules                 # AI配置文件（Cursor IDE）
-├── config.py                    # 配置文件
-├── ndrc_crawler.py              # 主爬虫程序
-├── data_extractor_full.py       # 数据提取器（完整版）
-├── content_splitter.py          # 内容分段器
-├── attachment_splitter.py       # 附件拆解器
-├── download_attachments.py      # 附件下载器
-├── commit_changes.py            # Git提交助手
-├── run.py                       # 一键启动脚本
-├── setup.py                     # 安装脚本
-├── requirements.txt             # 依赖管理
-├── results/                     # 爬取结果目录
-│   ├── 发展改革委令/
-│   ├── 规范性文件/
-│   ├── 规划文本/
-│   ├── 公告/
-│   └── 通知/
-├── logs/                        # 日志文件目录
-├── full_data/                   # 完整数据目录（已忽略）
-└── *.xlsx                       # 数据输出文件
+├── requirements.txt             # 依赖包列表
+├── .cursorrules                 # AI配置文件
+├── mohrss_crawler/              # 人社部爬虫模块
+│   ├── README.md               # 人社部爬虫说明
+│   ├── config.py               # 配置文件
+│   ├── mohrss_crawler.py       # 基础爬虫程序
+│   ├── mohrss_raw_crawler.py   # 原始页面爬虫
+│   ├── mohrss_detailed_parser.py # 详细解析器
+│   ├── simple_download.py      # 简单下载器
+│   ├── results/                # 结果文件目录
+│   ├── logs/                   # 日志文件目录
+│   ├── downloads/              # 下载文件目录
+│   └── parsed_content/         # 解析内容目录
+└── ndrc_crawler/               # 发改委爬虫模块
+    ├── README.md               # 发改委爬虫说明
+    ├── config.py               # 配置文件
+    ├── ndrc_crawler.py         # 主爬虫程序
+    ├── data_extractor_full.py  # 数据提取器
+    ├── content_splitter.py     # 内容分段器
+    ├── attachment_splitter.py  # 附件拆解器
+    ├── download_attachments.py # 附件下载器
+    ├── commit_changes.py       # Git提交助手
+    ├── run.py                  # 一键启动脚本
+    ├── setup.py                # 安装脚本
+    ├── results/                # 结果文件目录
+    ├── logs/                   # 日志文件目录
+    └── full_data/              # 完整数据目录
 ```
 
-### 配置文件说明
-
-- **`.cursorrules`**: Cursor IDE的AI配置文件，定义了AI助手的行为规则和项目开发指导原则
-  - 包含代码风格指南（PEP 8）
-  - 项目开发流程指导
-  - 错误处理和日志记录规范
-  - 文档编写要求
-
-## 安装和使用
+## 🛠️ 安装和配置
 
 ### 环境要求
-
 - Python 3.7+
-- Windows/Linux/macOS
+- 稳定的网络连接
+- 足够的存储空间（建议至少2GB）
 
-### 依赖安装
-
+### 安装依赖
 ```bash
-pip install requests
-pip install beautifulsoup4
-pip install pandas
-pip install openpyxl
-pip install urllib3
+# 克隆项目
+git clone <repository-url>
+cd Crawler
+
+# 安装依赖包
+pip install -r requirements.txt
+```
+
+### AI智能体API配置
+
+项目集成了AI智能体API功能，支持智能搜索和对话。配置方法如下：
+
+#### 方法一：使用配置文件（推荐）
+1. 编辑 `api_config.env` 文件，设置您的API配置：
+```bash
+BASE_URL=http://localhost:8080/chat/api
+API_KEY=application-ad6838518159e632447b68bfc3cbdf6a
+PROFILE_ID=0198ac57-bf0e-7e61-bb66-56f7787966a8
+```
+
+2. 运行配置加载器：
+```bash
+python load_api_config.py
+```
+
+#### 方法二：直接设置环境变量
+```bash
+# Windows PowerShell
+$env:BASE_URL="http://localhost:8080/chat/api"
+$env:API_KEY="application-ad6838518159e632447b68bfc3cbdf6a"
+$env:PROFILE_ID="0198ac57-bf0e-7e61-bb66-56f7787966a8"
+
+# Linux/Mac
+export BASE_URL="http://localhost:8080/chat/api"
+export API_KEY="application-ad6838518159e632447b68bfc3cbdf6a"
+export PROFILE_ID="0198ac57-bf0e-7e61-bb66-56f7787966a8"
+```
+
+#### 方法三：命令行参数
+```bash
+python api_test.py \
+  --base-url http://localhost:8080/chat/api \
+  --api-key application-ad6838518159e632447b68bfc3cbdf6a \
+  --profile-id 0198ac57-bf0e-7e61-bb66-56f7787966a8 \
+  --message "你好"
 ```
 
 ### 快速开始
 
-1. **克隆项目**
+#### 1. 运行人社部爬虫
 ```bash
-git clone https://github.com/ABSXDIVY/ndrc_crawler.git
+cd mohrss_crawler
+python mohrss_crawler.py
+```
+
+#### 2. 运行发改委爬虫
+```bash
 cd ndrc_crawler
+python run.py
 ```
 
-2. **配置参数**
-编辑 `config.py` 文件，根据需要调整爬取参数：
-- 修改爬取页数限制
-- 调整请求延迟时间
-- 配置测试模式
-
-3. **运行爬虫**
+#### 3. 启动Web界面（包含AI功能）
 ```bash
-python ndrc_crawler.py
+cd web_interface
+python start_server.py
 ```
+然后在浏览器中访问 `http://localhost:8000`
 
-4. **提取数据**
+#### 4. 测试AI智能体API
 ```bash
-python data_extractor_full.py
+# 使用配置加载器（推荐）
+python load_api_config.py
+
+# 或直接运行测试
+python api_test.py --message "你好"
 ```
 
-5. **处理内容**
-```bash
-python content_splitter.py
-python attachment_splitter.py
-```
+## 📊 数据输出说明
 
-## 配置说明
+### 人社部爬虫输出
+- **Excel文件**：`mohrss_crawler_results_*.xlsx`
+  - 搜索结果工作表：标题、链接、发布时间、摘要等
+  - 统计信息工作表：基本统计信息
+- **JSON文件**：`mohrss_crawler_results_*.json`
+- **分析报告**：`mohrss_data_analysis_*.xlsx`
 
-### 爬取配置 (config.py)
+### 发改委爬虫输出
+- **基础数据**：`policy_data.xlsx`
+- **完整数据**：`policy_data_full.xlsx`
+- **分段内容**：`policy_content_split.xlsx`
+- **附件信息**：`policy_attachments_split.xlsx`
 
+## ⚙️ 配置说明
+
+### 人社部爬虫配置 (`mohrss_crawler/config.py`)
 ```python
-# 政策分类配置
+CRAWL_CONFIG = {
+    'start_page': 1,        # 开始页码
+    'end_page': 5,          # 结束页码
+    'max_retries': 3,       # 最大重试次数
+    'timeout': 30,          # 请求超时时间
+    'min_delay': 1,         # 最小延迟时间
+    'max_delay': 3,         # 最大延迟时间
+}
+```
+
+### 发改委爬虫配置 (`ndrc_crawler/config.py`)
+```python
 POLICY_CATEGORIES = {
     '发展改革委令': {
         'name': '发展改革委令',
@@ -134,7 +196,6 @@ POLICY_CATEGORIES = {
     # ... 其他分类
 }
 
-# 爬取控制参数
 CRAWL_CONFIG = {
     'max_pages_per_category': None,  # 每分类最大页数
     'delay_between_pages': 1,        # 页面间延迟
@@ -142,47 +203,66 @@ CRAWL_CONFIG = {
 }
 ```
 
-### 输出文件说明
+## 🔧 高级用法
 
-- `policy_data.xlsx` - 基础政策数据
-- `policy_data_full.xlsx` - 完整政策数据（包含正文和附件）
-- `policy_content_split.xlsx` - 分段后的政策内容
-- `policy_attachments_split.xlsx` - 拆解后的附件信息
-
-## 使用示例
-
-### 基础爬取
+### 自定义爬取范围
 ```python
-from ndrc_crawler import NDRCCrawler
+# 人社部爬虫
+from mohrss_crawler.mohrss_crawler import MOHRSSCrawler
+crawler = MOHRSSCrawler()
+results = crawler.run(start_page=1, end_page=10)
 
+# 发改委爬虫
+from ndrc_crawler.ndrc_crawler import NDRCCrawler
 crawler = NDRCCrawler()
 crawler.crawl_all_categories()
 ```
 
-### 数据提取
+### 数据处理
 ```python
-from data_extractor_full import PolicyDataExtractor
-
-extractor = PolicyDataExtractor(test_mode=True, max_test_items=10)
-extractor.process_all_results()
-```
-
-### 内容分段
-```python
-from content_splitter import ContentSplitter
-
+# 内容分段
+from ndrc_crawler.content_splitter import ContentSplitter
 splitter = ContentSplitter(max_chars=1000)
+splitter.process_excel_file('policy_data_full.xlsx')
+
+# 附件处理
+from ndrc_crawler.attachment_splitter import AttachmentSplitter
+splitter = AttachmentSplitter()
 splitter.process_excel_file('policy_data_full.xlsx')
 ```
 
-## 注意事项
+## 📝 日志和监控
 
+### 日志文件位置
+- 人社部爬虫：`mohrss_crawler/logs/`
+- 发改委爬虫：`ndrc_crawler/logs/`
+
+### 日志级别
+- **INFO**：正常运行信息
+- **WARNING**：警告信息
+- **ERROR**：错误信息
+
+### 监控要点
+- 检查日志文件中的错误信息
+- 监控爬取进度和成功率
+- 关注网络连接状态
+- 检查磁盘空间使用情况
+
+## ⚠️ 注意事项
+
+### 使用规范
 1. **遵守网站规则**：请合理控制爬取频率，避免对目标网站造成过大压力
 2. **数据使用**：爬取的数据仅供学习和研究使用，请遵守相关法律法规
 3. **网络环境**：确保网络连接稳定，建议在稳定的网络环境下运行
 4. **存储空间**：爬取的数据量较大，请确保有足够的存储空间
 
-## 故障排除
+### 技术限制
+1. **网站结构变化**：目标网站结构可能发生变化，需要定期更新选择器
+2. **反爬虫机制**：网站可能升级反爬虫机制，需要相应调整
+3. **网络稳定性**：网络环境可能影响爬取稳定性
+4. **数据完整性**：建议定期验证数据完整性
+
+## 🐛 故障排除
 
 ### 常见问题
 
@@ -201,36 +281,62 @@ splitter.process_excel_file('policy_data_full.xlsx')
    - 分批处理大文件
    - 增加系统内存
 
-### 日志查看
+4. **文件保存失败**
+   - 检查目录权限
+   - 确保磁盘空间充足
+   - 验证文件路径
 
-所有操作日志保存在 `logs/` 目录下：
-- `ndrc_crawler_YYYYMMDD.log` - 爬虫日志
-- `data_extractor.log` - 数据提取日志
-- `content_splitter.log` - 内容分段日志
-- `attachment_splitter.log` - 附件拆解日志
+### 调试方法
+1. **查看日志文件**：检查详细的错误信息和运行过程
+2. **保存原始页面**：查看实际页面内容，分析页面结构
+3. **逐步测试**：先爬取单页测试，逐步增加页面数
 
-## 开发计划
+## 🔄 更新日志
 
-- [ ] 支持更多政策来源网站
-- [ ] 添加数据可视化功能
-- [ ] 实现增量更新机制
-- [ ] 优化爬取性能
-- [ ] 添加Web界面
+### v2.0.0 (2025-01-XX)
+- 整合两个爬虫项目
+- 统一项目结构和文档
+- 优化配置管理
+- 改进错误处理机制
 
-## 贡献指南
+### v1.1.0 (2025-08-18)
+- 人社部爬虫增强版发布
+- 发改委爬虫完整功能
+- 配置文件支持
+- 改进错误处理
+
+### v1.0.0 (2025-08-18)
+- 初始版本发布
+- 基础爬取功能
+- 数据保存功能
+- 日志记录功能
+
+## 🤝 贡献指南
 
 欢迎提交Issue和Pull Request来改进项目！
 
-## 许可证
+### 贡献方式
+1. Fork项目
+2. 创建功能分支
+3. 提交更改
+4. 创建Pull Request
 
-本项目采用 MIT 许可证，详见 [LICENSE](LICENSE) 文件。
+### 开发规范
+- 遵循PEP 8代码风格
+- 添加适当的注释和文档
+- 编写单元测试
+- 更新相关文档
 
-## 联系方式
+## 📄 许可证
+
+本项目采用MIT许可证，详见[LICENSE](LICENSE)文件。
+
+## 📞 联系方式
 
 如有问题或建议，请通过以下方式联系：
-- 提交 GitHub Issue
+- 提交GitHub Issue
 - 发送邮件至项目维护者
 
 ---
 
-**免责声明**：本项目仅供学习和研究使用，使用者需自行承担使用风险，并遵守相关法律法规。
+**免责声明**：本项目仅供学习和研究使用，使用者需自行承担使用风险，并遵守相关法律法规。请合理使用爬取的数据，尊重网站的使用条款和版权。
