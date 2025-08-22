@@ -21,6 +21,7 @@
 - **智能体API集成**：支持AI智能体API，提供智能对话和搜索功能
 - **智能搜索**：基于AI的语义搜索，更准确地匹配用户需求
 - **Web界面**：提供现代化的Web界面，支持AI搜索和结果展示
+- **智能链接渲染**：自动识别并渲染可点击的链接，提升用户体验
 - **配置管理**：灵活的配置管理，支持多种API配置方式
 
 ### 数据处理功能
@@ -87,6 +88,78 @@ cd Crawler
 pip install -r requirements.txt
 ```
 
+## 🖥️ 桌面应用程序
+
+项目还提供了基于Electron的桌面应用程序，将网页功能打包成独立的可执行文件。
+
+### 桌面应用特性
+- **跨平台支持**: Windows、macOS、Linux
+- **自动服务器管理**: 应用启动时自动启动Python代理服务器
+- **原生体验**: 提供桌面应用的原生体验
+- **一键启动**: 无需手动配置环境
+
+### 快速开始
+
+#### 方法一：使用启动脚本（推荐）
+```bash
+# Windows
+cd web_interface
+start.bat
+
+# Linux/macOS
+cd web_interface
+chmod +x start.sh
+./start.sh
+```
+
+#### 方法二：手动构建
+```bash
+# 进入web_interface目录
+cd web_interface
+
+# 安装依赖
+npm install
+pip install -r requirements.txt
+
+# 开发模式运行
+npm start
+
+# 构建应用
+npm run build-win    # Windows
+npm run build-mac    # macOS
+npm run build-linux  # Linux
+```
+
+#### 方法三：自动化构建
+```bash
+# 使用构建脚本
+node build.js
+
+# 指定平台构建
+node build.js win    # Windows
+node build.js mac    # macOS
+node build.js linux  # Linux
+```
+
+### 桌面应用文件结构
+```
+web_interface/
+├── package.json          # Electron应用配置
+├── main.js              # 主进程文件
+├── preload.js           # 预加载脚本
+├── index.html           # 主界面
+├── app.js               # 前端逻辑
+├── style.css            # 样式文件
+├── start_server.py      # Python代理服务器
+├── requirements.txt     # Python依赖
+├── build.js             # 构建脚本
+├── start.bat            # Windows启动脚本
+├── start.sh             # Linux/macOS启动脚本
+└── README_APP.md        # 应用详细说明
+```
+
+详细说明请参考：[桌面应用说明](web_interface/README_APP.md)
+
 ### AI智能体API配置
 
 项目集成了AI智能体API功能，支持智能搜索和对话。配置方法如下：
@@ -146,6 +219,20 @@ cd web_interface
 python start_server.py
 ```
 然后在浏览器中访问 `http://localhost:8000`
+
+**Web界面功能特性：**
+- **智能搜索**：支持自然语言搜索和AI对话
+- **实时流式响应**：搜索结果实时显示，无需等待
+- **可点击链接**：自动识别并渲染HTTP/HTTPS链接为可点击形式
+- **复制功能**：一键复制搜索结果到剪贴板
+- **响应式设计**：支持桌面和移动设备访问
+- **调试日志**：提供详细的调试信息，便于问题排查
+
+**链接功能说明：**
+- 系统会自动识别文本中的HTTP和HTTPS链接
+- 链接会在新标签页中打开，确保安全性
+- 支持带查询参数和路径的复杂链接
+- 链接样式与整体界面风格保持一致
 
 #### 4. 测试AI智能体API
 ```bash
