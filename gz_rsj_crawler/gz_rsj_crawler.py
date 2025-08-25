@@ -73,7 +73,7 @@ class GZRSSCrawler:
                     try:
                         data = response.json()
                         # 检查数据是否为空
-                        if not data or ('list' not in data) or (not data['list']):
+                        if not data or ('articles' not in data) or (not data['articles']):
                             logger.warning(f'第 {page_num} 页没有数据')
                             return None
 
@@ -85,11 +85,15 @@ class GZRSSCrawler:
                         with open(filepath, 'w', encoding='utf-8') as f:
                             json.dump(data, f, ensure_ascii=False, indent=2)
 
-                        logger.info(f'成功爬取第 {page_num} 页数据，已保存至: {filepath}')
+                        logger.info(f'成功爬取第 {page_num} 页数据，共 {len(data["articles"])} 条记录，已保存至: {filepath}')
                         return data
                     except json.JSONDecodeError as e:
                         logger.error(f'第 {page_num} 页数据解析失败: {str(e)}')
                         return None
+                elif response.status_code == 404:
+                    logger.error(f'爬取第 {page_num} 页失败，状态码: {response.status_code} (页面不存在)')
+                    # 对于404错误，直接返回特殊标记表示无数据
+                    return {'no_more_data': True}
                 else:
                     logger.error(f'爬取第 {page_num} 页失败，状态码: {response.status_code}')
                     retries += 1
@@ -122,27 +126,44 @@ class GZRSSCrawler:
             page_num = start_page
             while True:
                 data = self.crawl_page(page_num)
-                if not data or ('list' not in data) or (not data['list']):
+                if not data:
+                    logger.info('没有更多数据，停止爬取')
+                    break
+                elif 'no_more_data' in data and data['no_more_data']:
+                    logger.info(f'检测到404错误，当前类型 {self.crawler_type} 没有更多数据')
+                    return False  # 返回False表示遇到404，需要切换类型
+                elif ('articles' not in data) or (not data['articles']):
                     logger.info('没有更多数据，停止爬取')
                     break
                 page_num += 1
                 time.sleep(delay)
             logger.info(f'完成自动爬取所有页面，共爬取 {page_num - start_page} 页')
+            return True
         else:
             logger.info(f'开始爬取第 {start_page} 至 {end_page} 页数据 (类型: {self.crawler_type} - {CRAWLER_TYPES[self.crawler_type]})')
             for page_num in range(start_page, end_page + 1):
-                self.crawl_page(page_num)
+                data = self.crawl_page(page_num)
+                if data and 'no_more_data' in data and data['no_more_data']:
+                    logger.info(f'检测到404错误，当前类型 {self.crawler_type} 没有更多数据')
+                    return False  # 返回False表示遇到404，需要切换类型
                 # 添加延时，避免请求过快
                 if page_num < end_page:
                     time.sleep(delay)
             logger.info(f'完成爬取第 {start_page} 至 {end_page} 页数据')
+            return True
 
     def crawl_all_types(self):
         """爬取所有类型的数据"""
         logger.info('开始爬取所有类型的数据')
-        for crawler_type in CRAWLER_TYPES.keys():
+        current_type_index = list(CRAWLER_TYPES.keys()).index(self.crawler_type)
+        types_to_crawl = list(CRAWLER_TYPES.keys())[current_type_index:]
+        
+        for crawler_type in types_to_crawl:
             self.set_crawler_type(crawler_type)
-            self.crawl_multiple_pages()
+            result = self.crawl_multiple_pages()
+            if not result:
+                logger.info(f'当前类型 {crawler_type} 爬取遇到404，自动切换到下一个类型')
+                continue
         logger.info('完成爬取所有类型的数据')
 
 if __name__ == '__main__':
